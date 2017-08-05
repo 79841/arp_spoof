@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pcap.h>
+#include <unistd.h>
 #include "header.h"
 #define ETHERTYPE_ARP 0x0806
 
@@ -22,6 +23,7 @@ int main(int argc, char ** argv){
 		strncpy(p_thread->argv3,argv[i+1],20);
 		printf("# = %s %s %s\n",p_thread->argv1,p_thread->argv2,p_thread->argv3);
 		thr_id = pthread_create(&thread[i/2-1],NULL,func,(void *)p_thread);
+		sleep(2);
 	}
 	for(i=0;i<(argc-2)/2;i++){
 		pthread_join(thread[i], (void **)&status);
