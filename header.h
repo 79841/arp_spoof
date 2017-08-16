@@ -28,8 +28,11 @@ struct p_thread{
 	char argv2[20];
 	char argv3[20];
 };
-struct p1_thread{
+struct p_thread * p_thread;
+/*struct p1_thread{
 	pcap_t * handle;
 	unsigned char packet[42];
-};
+};*/
+pcap_t * handle;
 void * func(void * p_thread);
+pthread_mutex_t mutex;
